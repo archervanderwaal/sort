@@ -1,4 +1,4 @@
-package me.stormma;
+package me.stormma.java;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -8,24 +8,24 @@ public class SortExample {
 	public static void main(String[] args) {
 		Integer[] a = {1, 14, 2, 13, 3, 12, 4, 11, 5, 10, 6, 9, 7, 8};
 		//选择排序
-		// me.stormma.SortUtils.sort(a, me.stormma.SortFactory.sortFactory.get("SelectSort"));
-		// assert me.stormma.SortUtils.isSorted(a);
-		// me.stormma.SortUtils.show(a);
+		// me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("SelectSort"));
+		// assert me.stormma.java.SortUtils.isSorted(a);
+		// me.stormma.java.SortUtils.show(a);
 
 		//插入排序
-		// me.stormma.SortUtils.sort(a, me.stormma.SortFactory.sortFactory.get("InsertSort"));
-		// assert me.stormma.SortUtils.isSorted(a);
-		// me.stormma.SortUtils.show(a);
+		// me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("InsertSort"));
+		// assert me.stormma.java.SortUtils.isSorted(a);
+		// me.stormma.java.SortUtils.show(a);
 
 		//冒泡排序
-		// me.stormma.SortUtils.sort(a, me.stormma.SortFactory.sortFactory.get("BubbleSort"));
-		// assert me.stormma.SortUtils.isSorted(a);
-		// me.stormma.SortUtils.show(a);
+		// me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("BubbleSort"));
+		// assert me.stormma.java.SortUtils.isSorted(a);
+		// me.stormma.java.SortUtils.show(a);
 
 		//希尔排序
-		// me.stormma.SortUtils.sort(a, me.stormma.SortFactory.sortFactory.get("ShellSort"));
-		// assert me.stormma.SortUtils.isSorted(a);
-		// me.stormma.SortUtils.show(a);
+		// me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("ShellSort"));
+		// assert me.stormma.java.SortUtils.isSorted(a);
+		// me.stormma.java.SortUtils.show(a);
 
 		//归并排序
 		SortUtils.sort(a, SortFactory.sortFactory.get("MergeSort"));
@@ -159,29 +159,27 @@ class SortFactory {
 			sort(a, 0, a.length - 1);
 		}
 
-		private void sort(Comparable[] a, int low, int height) {
-			if (height <= low) {
+		private void sort(Comparable[] a, int low, int high) {
+			if (high <= low) {
 				return;
 			}
-			int mid = low + (height - low) / 2;
+			int mid = low + (high - low) / 2;
 			sort(a, low, mid);
-			sort(a, mid + 1, height);
-			merge(a, low, mid, height);
+			sort(a, mid + 1, high);
+			merge(a, low, mid, high);
 		}
 
-		private void  merge(Comparable[] a, int low, int mid, int height) {
+		private void  merge(Comparable[] a, int low, int mid, int high) {
 			int i = low, j = mid + 1;
-			for (int k = low; k <= height; k++) {
+			for (int k = low; k <= high; k++) {
 				aux[k] = a[k];
 			}
-			for (int k = low; k <= height; k++) {
-				if (i > mid) {
+			for (int k = low; k <= high; k++) {
+				if (i <= mid && j <= high) {
+					a[k] = SortUtils.less(aux[i], aux[j]) ? aux[i++] : aux[j++];
+				} else if (i > mid) {
 					a[k] = aux[j++];
-				} else if (j > height) {
-					a[k] = aux[i++];
-				} else if (SortUtils.less(aux[j], aux[i])) {
-					a[k] = aux[j++];
-				} else {
+				} else if (j > high) {
 					a[k] = aux[i++];
 				}
 			}
