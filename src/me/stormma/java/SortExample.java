@@ -6,29 +6,39 @@ import java.util.HashMap;
 public class SortExample {
 
 	public static void main(String[] args) {
-		Integer[] a = {1, 14, 2, 13, 3, 12, 4, 11, 5, 10, 6, 9, 7, 8};
-		//选择排序
+//		Integer[] a = {1, 14, 2, 13, 3, 12, 4, 11, 5, 10, 6, 9, 7, 8};
+		Integer[] a = {5, 1, 2, 4, 3, 6, 7, 9, 8};
+		//Select Sort
 		// me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("SelectSort"));
 		// assert me.stormma.java.SortUtils.isSorted(a);
 		// me.stormma.java.SortUtils.show(a);
 
-		//插入排序
+		//Insert Sort
 		// me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("InsertSort"));
 		// assert me.stormma.java.SortUtils.isSorted(a);
 		// me.stormma.java.SortUtils.show(a);
 
-		//冒泡排序
+		//Bubble Sort
 		// me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("BubbleSort"));
 		// assert me.stormma.java.SortUtils.isSorted(a);
 		// me.stormma.java.SortUtils.show(a);
 
-		//希尔排序
+		//Shell Sort
 		// me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("ShellSort"));
 		// assert me.stormma.java.SortUtils.isSorted(a);
 		// me.stormma.java.SortUtils.show(a);
 
-		//归并排序
-		SortUtils.sort(a, SortFactory.sortFactory.get("MergeSort"));
+		//Top-Down Merge Sort
+		//SortUtils.sort(a, SortFactory.sortFactory.get("MergeSortTD"));
+		//assert SortUtils.isSorted(a);
+		//SortUtils.show(a);
+
+		//Bottom-Top Merge Sort
+		//SortUtils.sort(a, SortFactory.sortFactory.get("MergeSortBU"));
+		//assert SortUtils.isSorted(a);
+		//SortUtils.show(a);
+
+		SortUtils.sort(a, SortFactory.sortFactory.get("QuickSort"));
 		assert SortUtils.isSorted(a);
 		SortUtils.show(a);
 	}
@@ -81,7 +91,9 @@ class SortFactory {
 		sortFactory.put("BubbleSort", new BubbleSort());
 		sortFactory.put("InsertSort", new InsertSort());
 		sortFactory.put("ShellSort", new ShellSort());
-		sortFactory.put("MergeSort", new MergeSort());
+		sortFactory.put("MergeSortTD", new MergeSortTD());
+		sortFactory.put("MergeSortBU", new MergeSortBU());
+		sortFactory.put("QuickSort", new QuickSort());
 	}
 
 	static class SelectSort implements Sort {
@@ -149,7 +161,7 @@ class SortFactory {
 		}
 	}
 
-	static class MergeSort implements Sort {
+	static class MergeSortTD implements Sort {
 
 		private static Comparable[] aux;
 
@@ -169,7 +181,7 @@ class SortFactory {
 			merge(a, low, mid, high);
 		}
 
-		private void  merge(Comparable[] a, int low, int mid, int high) {
+		private static void  merge(Comparable[] a, int low, int mid, int high) {
 			int i = low, j = mid + 1;
 			for (int k = low; k <= high; k++) {
 				aux[k] = a[k];
@@ -183,6 +195,81 @@ class SortFactory {
 					a[k] = aux[i++];
 				}
 			}
+		}
+	}
+
+	static class MergeSortBU implements Sort {
+		private static Comparable[] aux;
+		@Override
+		public void sort(Comparable[] a) {
+			aux = new Comparable[a.length];
+			int length = a.length;
+			for (int sz = 1; sz < length; sz += sz) {
+				for (int lo = 0; lo < length - sz; lo += 2 * sz) {
+					System.out.println(sz);
+					merge(a, lo, lo + sz - 1, Math.min(lo + 2 * sz - 1, length - 1) );
+				}
+			}
+		}
+
+		private static void  merge(Comparable[] a, int low, int mid, int high) {
+			System.out.println("Starting => merge(a, " + low + ", " + mid + ", " + high + ")");
+			int i = low, j = mid + 1;
+			for (int k = low; k <= high; k++) {
+				aux[k] = a[k];
+			}
+			for (int k = low; k <= high; k++) {
+				if (i <= mid && j <= high) {
+					a[k] = SortUtils.less(aux[i], aux[j]) ? aux[i++] : aux[j++];
+				} else if (i > mid) {
+					a[k] = aux[j++];
+				} else if (j > high) {
+					a[k] = aux[i++];
+				}
+			}
+			System.out.println("Merge result: ");
+			SortUtils.show(a);
+		}
+	}
+
+	static class QuickSort implements Sort {
+
+		@Override
+		public void sort(Comparable[] a) {
+			int length = a.length;
+			sort(a, 0, length - 1);
+		}
+
+		private void sort(Comparable[] a, int low, int high) {
+			if (high <= low) {
+				return;
+			}
+			int j = partition(a, low, high);
+			sort(a, low, j - 1);
+			sort(a, j + 1, high);
+		}
+
+		private int partition(Comparable[] a, int low, int high) {
+			int i = low, j = high + 1;
+			Comparable value = a[low];
+			while (true) {
+				while (SortUtils.less(a[++i], value)) {
+					if (i == high) {
+						break;
+					}
+				}
+				while (SortUtils.less(value, a[--j])) {
+					if (j == low) {
+						break;
+					}
+				}
+				if (i >= j) {
+					break;
+				}
+				SortUtils.exch(a, i, j);
+			}
+			SortUtils.exch(a, low, j);
+			return j;
 		}
 	}
 }

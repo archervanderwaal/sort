@@ -3,53 +3,53 @@
 
 static int aux[SIZE] = {0};
 
-void printArray(int * nums) {
+void show_array(int * array) {
 	for (int i = 0; i < SIZE; i++) {
-        printf("%d ", nums[i]);
+        printf("%d ", array[i]);
     }
 }
 
-void select_sort(int * nums) {
+void select_sort(int * array) {
 	for (int i = 0; i < SIZE - 1; i++) {
 		int min = i;
 		for (int j = i + 1; j < SIZE; j++) {
-			if (nums[j] < nums[min]) {
+			if (array[j] < array[min]) {
 				min = j;
 			}
 		}
 		if (min != i) {
-			int temp = nums[min];
-			nums[min] = nums[i];
-			nums[i] = temp;
+			int temp = array[min];
+			array[min] = array[i];
+			array[i] = temp;
 		}
 	}
 }
 
-void bubble_sort(int * nums) {
-	for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 5-i; j++) {
-            if (nums[j] > nums[j+1]) {
-                int temp = nums[j];
-                nums[j] = nums[j+1];
-                nums[j+1] = temp;
+void bubble_sort(int * array) {
+	for (int i = 0; i < SIZE - 1; i++) {
+        for (int j = 0; j < SIZE - 1 - i; j++) {
+            if (array[j] > array[j+1]) {
+                int temp = array[j];
+                array[j] = array[j+1];
+                array[j+1] = temp;
             }
         }
     }
 }
 
-void insert_sort(int * nums) {
+void insert_sort(int * array) {
 	for (int i = 1; i < SIZE; i++) {
 		for (int j = i; j > 0; j--) {
-			if (nums[j] < nums[j-1]) {
-				int temp = nums[j];
-				nums[j] = nums[j-1];
-				nums[j-1] = temp;
+			if (array[j] < array[j-1]) {
+				int temp = array[j];
+				array[j] = array[j-1];
+				array[j-1] = temp;
 			}
 		}
 	}
 }
 
-void shell_sort(int * nums, int len) {
+void shell_sort(int * array, int len) {
 	//init gap
 	int gap = 1;
 	while (gap < len / 3) {
@@ -58,10 +58,10 @@ void shell_sort(int * nums, int len) {
 	for (; gap > 0; gap /= 3) {
 		for (int i = gap; i < len; i++) {
 			for (int j = i; j >= gap; j -= gap) {
-				if (nums[j] < nums[j-gap]) {
-					int temp = nums[j];
-                	nums[j] = nums[j-gap];
-                	nums[j-gap] = temp;
+				if (array[j] < array[j-gap]) {
+					int temp = array[j];
+                	array[j] = array[j-gap];
+                	array[j-gap] = temp;
 				}
 			}
 		}
@@ -87,26 +87,26 @@ void _merge(int * array, int low, int mid, int high) {
 	}
 }
 
-void _merge_sort(int * nums, int low, int high) {
+void _merge_sort(int * array, int low, int high) {
     if (high <= low)
         return;
     int mid = low + ((high - low) >> 1);
-    _merge_sort(nums, low, mid);
-    _merge_sort(nums, mid+1, high);
-    _merge(nums, low, mid, high);
+    _merge_sort(array, low, mid);
+    _merge_sort(array, mid+1, high);
+    _merge(array, low, mid, high);
 }
 
-void merge_sort(int * nums, int length) {
+void merge_sort(int * array, int length) {
     int high = length - 1, low = 0;
-    _merge_sort(nums, low, high);
+    _merge_sort(array, low, high);
 }
 
 int main() {
-	int nums[] = {3, 2, 1, 4, 9, 8};
-//	select_sort(nums);
-//	bubble_sort(nums);
-//	insert_sort(nums);
-//	shell_sort(nums, sizeof(nums) / sizeof(nums[0]));
-	merge_sort(nums, sizeof(nums) / sizeof(nums[0]));
-	printArray(nums);
+	int array[] = {3, 2, 1, 4, 9, 8};
+//	select_sort(array);
+//	bubble_sort(array);
+//	insert_sort(array);
+//	shell_sort(array, sizeof(array) / sizeof(array[0]));
+	merge_sort(array, sizeof(array) / sizeof(array[0]));
+	show_array(array);
 }
