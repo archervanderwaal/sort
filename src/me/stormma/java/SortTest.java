@@ -1,55 +1,87 @@
 package me.stormma.java;
 
+import org.junit.Test;
+
 import java.util.Map;
 import java.util.HashMap;
 
-public class SortExample {
+/**
+ * sort Example class
+ * 
+ * @author stormma
+ * @date 2017/11/16
+ */
+public class SortTest {
+
+    private static Integer[] a = {1, 14, 2, 13, 3, 12, 4, 11, 5, 10, 6, 9, 7, 8};
 
 	public static void main(String[] args) {
-//		Integer[] a = {1, 14, 2, 13, 3, 12, 4, 11, 5, 10, 6, 9, 7, 8};
-//		Integer[] a = {5, 1, 2, 4, 3, 6, 7, 9, 8};
-		Integer[] a = {2, 8, 7, 1, 3, 5, 6, 4};
-		//Select Sort
-		// me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("SelectSort"));
-		// assert me.stormma.java.SortUtils.isSorted(a);
-		// me.stormma.java.SortUtils.show(a);
 
-		//Insert Sort
-		// me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("InsertSort"));
-		// assert me.stormma.java.SortUtils.isSorted(a);
-		// me.stormma.java.SortUtils.show(a);
+	}
 
-		//Bubble Sort
-		// me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("BubbleSort"));
-		// assert me.stormma.java.SortUtils.isSorted(a);
-		// me.stormma.java.SortUtils.show(a);
+	@Test
+    public void testSelectSort() {
+        me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("SelectSort"));
+        assert me.stormma.java.SortUtils.isSorted(a);
+        me.stormma.java.SortUtils.show(a);
+    }
 
-		//Shell Sort
-		// me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("ShellSort"));
-		// assert me.stormma.java.SortUtils.isSorted(a);
-		// me.stormma.java.SortUtils.show(a);
+    @Test
+    public void testInsertSort() {
+        me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("InsertSort"));
+        assert me.stormma.java.SortUtils.isSorted(a);
+        me.stormma.java.SortUtils.show(a);
+    }
 
-		//Top-Down Merge Sort
-		//SortUtils.sort(a, SortFactory.sortFactory.get("MergeSortTD"));
-		//assert SortUtils.isSorted(a);
-		//SortUtils.show(a);
+    @Test
+    public void testBubbleSort() {
+        me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("BubbleSort"));
+        assert me.stormma.java.SortUtils.isSorted(a);
+        me.stormma.java.SortUtils.show(a);
+    }
 
-		//Bottom-Top Merge Sort
-		//SortUtils.sort(a, SortFactory.sortFactory.get("MergeSortBU"));
-		//assert SortUtils.isSorted(a);
-		//SortUtils.show(a);
+    @Test
+    public void testShellSort() {
+        me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("ShellSort"));
+        assert me.stormma.java.SortUtils.isSorted(a);
+        me.stormma.java.SortUtils.show(a);
+    }
 
-		//SortUtils.sort(a, SortFactory.sortFactory.get("QuickSort"));
-		//assert SortUtils.isSorted(a);
-		//SortUtils.show(a);
+    @Test
+    public void testTopDownMergeSort() {
+        SortUtils.sort(a, SortFactory.sortFactory.get("MergeSortTD"));
+        assert SortUtils.isSorted(a);
+        SortUtils.show(a);
+    }
 
+    @Test
+    public void testBottomTopMergeSort() {
+        SortUtils.sort(a, SortFactory.sortFactory.get("MergeSortBU"));
+        assert SortUtils.isSorted(a);
+        SortUtils.show(a);
+    }
+
+    @Test
+    public void testQuickSort() {
+        SortUtils.sort(a, SortFactory.sortFactory.get("QuickSort"));
+        assert SortUtils.isSorted(a);
+        SortUtils.show(a);
+    }
+
+    @Test
+    public void testQuickSort3Way() {
         SortUtils.sort(a, SortFactory.sortFactory.get("QuickSort3Way"));
         assert SortUtils.isSorted(a);
         SortUtils.show(a);
-	}
+    }
 }
 
 interface Sort {
+    /**
+     * sort function
+     * 
+     * @param a Wait for sorted array.
+     */
 	void sort(Comparable[] a);
 }
 
@@ -153,11 +185,13 @@ class SortFactory {
 			System.out.print("before shell sort==>");
 			SortUtils.show(a);
 			int length = a.length;
-			int gap = 1; // 1, 4, 13, 40, 121...
-			while (gap < length / 3) {
-				gap = gap * 3 + 1;
+            // 1, 4, 13, 40, 121...
+			int gap = 1;
+            int dis = 3;
+			while (gap < length / dis) {
+				gap = gap * dis + 1;
 			}
-			for (; gap > 0; gap /= 3) {
+			for (; gap > 0; gap /= dis) {
 				for (int i = gap; i < length; i++) {
 					for (int j = i; j >= gap && SortUtils.less(a[j], a[j-gap]); j -= gap) {
 						SortUtils.exch(a, j, j-gap);
@@ -210,10 +244,11 @@ class SortFactory {
 		public void sort(Comparable[] a) {
 			aux = new Comparable[a.length];
 			int length = a.length;
+			int step = 2;
 			for (int sz = 1; sz < length; sz += sz) {
-				for (int lo = 0; lo < length - sz; lo += 2 * sz) {
+				for (int lo = 0; lo < length - sz; lo += step * sz) {
 					System.out.println(sz);
-					merge(a, lo, lo + sz - 1, Math.min(lo + 2 * sz - 1, length - 1) );
+					merge(a, lo, lo + sz - 1, Math.min(lo + step * sz - 1, length - 1) );
 				}
 			}
 		}
