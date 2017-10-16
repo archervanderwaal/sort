@@ -1,6 +1,8 @@
 package me.stormma.java;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -74,6 +76,13 @@ public class SortTest {
         assert SortUtils.isSorted(a);
         SortUtils.show(a);
     }
+
+    @Test
+    public void testHeapSort() {
+	    SortUtils.sort(a, SortFactory.sortFactory.get("HeapSort"));
+	    assert SortUtils.isSorted(a);
+	    SortUtils.show(a);
+    }
 }
 
 interface Sort {
@@ -86,6 +95,8 @@ interface Sort {
 }
 
 class SortUtils {
+
+    public static final Logger logger = LoggerFactory.getLogger(SortUtils.class);
 
 	public static boolean less(Comparable v, Comparable w) {
 		return v.compareTo(w) < 0;
@@ -106,7 +117,7 @@ class SortUtils {
 	}
 
 	public static boolean isSorted(Comparable[] a) {
-		for (int i = 0; i < a.length; i++) {
+		for (int i = 1; i < a.length; i++) {
 			if (less(a[i], a[i-1])) {
 				return false;
 			}
@@ -132,6 +143,7 @@ class SortFactory {
 		sortFactory.put("MergeSortBU", new MergeSortBU());
 		sortFactory.put("QuickSort", new QuickSort());
 		sortFactory.put("QuickSort3Way", new QuickSort3Way());
+		sortFactory.put("HeapSort", new HeapSort());
 	}
 
 	static class SelectSort implements Sort {
@@ -340,4 +352,36 @@ class SortFactory {
             sort(a, gt + 1, high);
         }
     }
+
+    static class HeapSort implements Sort {
+		@Override
+		public void sort(Comparable[] a) {
+            int N = a.length - 1;
+            //构造最大堆
+            for (int k = (N - 1) / 2; k >= 0; k--) {
+                sink(a, k, N);
+            }
+            SortUtils.show(a);
+            while (N > 0) {
+                SortUtils.exch(a, 0, N--);
+                sink(a, 0, N);
+            }
+		}
+
+		private void sink(Comparable[] a, int index, int N) {
+		    //left sub tree lt N
+            while ((2 * index + 1) <= N) {
+                int leftI = 2 * index + 1;
+                int maxI = leftI, rightI = leftI + 1;
+                if (leftI < N && SortUtils.less(a[leftI], a[rightI])) {
+                    maxI = rightI;
+                }
+                if (!SortUtils.less(a[index], a[maxI])) {
+                    break;
+                }
+                SortUtils.exch(a, index, maxI);
+                index = maxI;
+            }
+        }
+	}
 }

@@ -158,40 +158,99 @@ void _quick_sort_3way(int* array, int low, int high) {
     _quick_sort_3way(array, low, lt - 1);
     _quick_sort_3way(array, gt + 1, high);
 }
+
 void quick_sort_3way(int * array, int length) {
     _quick_sort(array, 0, length - 1);
 }
 
+void sink(int* array, int parentI, int N) {
+    // 当左子树存在的话，循环
+    while (parentI * 2 + 1 <= N) {
+        int leftI = parentI * 2 + 1;
+        int maxI = leftI, rightI = leftI + 1;
+        if (leftI < N && array[leftI] < array[rightI]) {
+            maxI = rightI;
+        }
+        // 假如已经有序了，终止循环
+        if (array[parentI] > array[maxI]) {
+            break;
+        }
+        exch(array, parentI, maxI);
+        parentI = maxI;
+    }
+}
+
+void heap_sort(int* array, int length) {
+    // 先构建最大堆有序
+    int N = length - 1;
+    // 因为从0开始，那么leftI = 2 * k + 1 rightI = 2 * (k +1)
+    for (int k = (N - 1) / 2; k >= 0; k--) {
+        sink(array, k, N);
+    }
+
+    while (N > 0) {
+        exch(array, 0, N--);
+        sink(array, 0, N);
+    }
+}
+
+
 int main() {
-	int array[] = {3, 2, 1, 4, 9, 8};
-	select_sort(array);
+	int select_array[] = {3, 2, 1, 4, 9, 8};
+	printf("Before select sort: \n");
+	show_array(select_array);
+	select_sort(select_array);
 	printf("After select sort: \n");
-	show_array(array);
+	show_array(select_array);
 
-	bubble_sort(array);
+    int bubble_array[] = {3, 2, 1, 4, 9, 8};
+    printf("Before bubble sort: \n");
+    show_array(bubble_array);
+	bubble_sort(bubble_array);
 	printf("After bubble sort: \n");
-	show_array(array);
+	show_array(bubble_array);
 
-	insert_sort(array);
+    int insert_array[] = {3, 2, 1, 4, 9, 8};
+    printf("Before insert sort: \n");
+    show_array(insert_array);
+	insert_sort(insert_array);
 	printf("After insert sort: \n");
-	show_array(array);
+	show_array(insert_array);
 
-	shell_sort(array, sizeof(array) / sizeof(array[0]));
+    int shell_array[] = {3, 2, 1, 4, 9, 8};
+    printf("Before shell sort: \n");
+    show_array(shell_array);
+	shell_sort(shell_array, sizeof(shell_array) / sizeof(shell_array[0]));
 	printf("After shell sort: \n");
-	show_array(array);
+	show_array(shell_array);
 
-	merge_sort(array, sizeof(array) / sizeof(array[0]));
+    int merge_array[] = {3, 2, 1, 4, 9, 8};
+    printf("Before merge sort: \n");
+    show_array(merge_array);
+	merge_sort(merge_array, sizeof(merge_array) / sizeof(merge_array[0]));
 	printf("After merge sort: \n");
-	show_array(array);
+	show_array(merge_array);
 
-
-    quick_sort(array, sizeof(array) / sizeof(array[0]));
+    int quick_array[] = {3, 2, 1, 4, 9, 8};
+    printf("Before quick sort");
+    show_array(quick_array);
+    quick_sort(quick_array, sizeof(quick_array) / sizeof(quick_array[0]));
     printf("After quick sort: \n");
-    show_array(array);
+    show_array(quick_array);
 
-    quick_sort_3way(array, sizeof(array) / sizeof(array[0]));
+    int quick_array_3way[] = {3, 2, 1, 4, 9, 8};
+    printf("Before quick three-way sort: \n");
+    show_array(quick_array_3way);
+    quick_sort_3way(quick_array_3way, sizeof(quick_array_3way) / sizeof(quick_array_3way[0]));
     printf("After quick three-way sort: \n");
-    show_array(array);
+    show_array(quick_array_3way);
+
+    int heap_array[] = {3, 2, 1, 4, 9, 8};
+    printf("Before heap sort: \n");
+    show_array(heap_array);
+    heap_sort(heap_array, sizeof(heap_array) / sizeof(heap_array[0]));
+    printf("After heap sort: \n");
+    show_array(heap_array);
 
     return 0;
 }
