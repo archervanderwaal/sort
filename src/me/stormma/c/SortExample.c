@@ -9,6 +9,12 @@ void show_array(int * array) {
     }
 }
 
+void exch(int* array, int a, int b) {
+    int temp = array[b];
+    array[b] = array[a];
+    array[a] = temp;
+}
+
 void select_sort(int * array) {
 	for (int i = 0; i < SIZE - 1; i++) {
 		int min = i;
@@ -101,12 +107,72 @@ void merge_sort(int * array, int length) {
     _merge_sort(array, low, high);
 }
 
+int partition(int * array, int low, int high) {
+    int i = low, j = high + 1;
+    //切分元素
+    int value = array[low];
+    while (1) {
+        while (array[++i] < value) {
+            if (i == high)
+                break;
+        }
+        while (value < array[--j]) {
+            if (j == low)
+                break;
+        }
+        if (i >= j)
+            break;
+        //交换i, j
+        exch(array, i, j);
+    }
+    exch(array, low, j);
+    return j;
+}
+
+void _quick_sort(int* array, int low, int high) {
+    if (high <= low) {
+        return;
+    }
+    int j = partition(array, low, high);
+    _quick_sort(array, low, j - 1);
+    _quick_sort(array, j + 1, high);
+}
+
+void _quick_sort_3way(int* array, int low, int high) {
+    if (high <= low) {
+        return;
+    }
+    int lt = low, i = low + 1, gt = high;
+    //切分元素
+    int value = array[low];
+    while (i <= gt) {
+        // array[i]和value比较
+        int cmp = array[i] - value;
+        if (cmp < 0)
+            exch(array, lt++, i++);
+        else if (cmp > 0)
+            exch(array, i, gt--);
+        else
+            i++;
+    }
+    _quick_sort_3way(array, low, lt - 1);
+    _quick_sort_3way(array, gt + 1, high);
+}
+void quick_sort_3way(int * array, int length) {
+    _quick_sort(array, 0, length - 1);
+}
+
 int main() {
 	int array[] = {3, 2, 1, 4, 9, 8};
 //	select_sort(array);
 //	bubble_sort(array);
 //	insert_sort(array);
 //	shell_sort(array, sizeof(array) / sizeof(array[0]));
-	merge_sort(array, sizeof(array) / sizeof(array[0]));
-	show_array(array);
+//	merge_sort(array, sizeof(array) / sizeof(array[0]));
+//	show_array(array);
+//    quick_sort(array, sizeof(array) / sizeof(array[0]));
+//    show_array(array);
+    quick_sort_3way(array, sizeof(array) / sizeof(array[0]));
+    show_array(array);
+    return 0;
 }

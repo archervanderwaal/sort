@@ -7,7 +7,8 @@ public class SortExample {
 
 	public static void main(String[] args) {
 //		Integer[] a = {1, 14, 2, 13, 3, 12, 4, 11, 5, 10, 6, 9, 7, 8};
-		Integer[] a = {5, 1, 2, 4, 3, 6, 7, 9, 8};
+//		Integer[] a = {5, 1, 2, 4, 3, 6, 7, 9, 8};
+		Integer[] a = {2, 8, 7, 1, 3, 5, 6, 4};
 		//Select Sort
 		// me.stormma.java.SortUtils.sort(a, me.stormma.java.SortFactory.sortFactory.get("SelectSort"));
 		// assert me.stormma.java.SortUtils.isSorted(a);
@@ -38,9 +39,13 @@ public class SortExample {
 		//assert SortUtils.isSorted(a);
 		//SortUtils.show(a);
 
-		SortUtils.sort(a, SortFactory.sortFactory.get("QuickSort"));
-		assert SortUtils.isSorted(a);
-		SortUtils.show(a);
+		//SortUtils.sort(a, SortFactory.sortFactory.get("QuickSort"));
+		//assert SortUtils.isSorted(a);
+		//SortUtils.show(a);
+
+        SortUtils.sort(a, SortFactory.sortFactory.get("QuickSort3Way"));
+        assert SortUtils.isSorted(a);
+        SortUtils.show(a);
 	}
 }
 
@@ -94,6 +99,7 @@ class SortFactory {
 		sortFactory.put("MergeSortTD", new MergeSortTD());
 		sortFactory.put("MergeSortBU", new MergeSortBU());
 		sortFactory.put("QuickSort", new QuickSort());
+		sortFactory.put("QuickSort3Way", new QuickSort3Way());
 	}
 
 	static class SelectSort implements Sort {
@@ -272,4 +278,31 @@ class SortFactory {
 			return j;
 		}
 	}
+
+	static class QuickSort3Way implements Sort {
+        @Override
+        public void sort(Comparable[] a) {
+            sort(a, 0, a.length - 1);
+        }
+
+        private void sort(Comparable[] a, int low, int high) {
+            if (high <= low) {
+                return;
+            }
+            int lt = low, i = low + 1, gt = high;
+            Comparable v = a[low];
+            while (i <= gt) {
+                int cmp = a[i].compareTo(v);
+                if (cmp < 0) {
+                    SortUtils.exch(a, lt++, i++);
+                } else if (cmp > 0) {
+                    SortUtils.exch(a, i, gt--);
+                } else {
+                    i++;
+                }
+            }
+            sort(a, low, lt - 1);
+            sort(a, gt + 1, high);
+        }
+    }
 }
