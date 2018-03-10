@@ -213,6 +213,9 @@ class SortFactory {
 		}
 	}
 
+    /**
+     * 时间复杂度   T(n) = 2T(n/2) + n
+     */
 	static class MergeSortTD implements Sort {
 
 		private static Comparable[] aux;
@@ -305,6 +308,18 @@ class SortFactory {
 		private int partition(Comparable[] a, int low, int high) {
 			int i = low, j = high + 1;
 			Comparable value = a[low];
+			while (low < high) {
+			    while (low < high && !SortUtils.less(a[high],/*>=*/ value)) {
+			        high--;
+                }
+                SortUtils.exch(a, high, low);
+                while (low < high && !SortUtils.less(value, a[low])) {
+			        low++;
+                }
+                SortUtils.exch(a, low, high);
+            }
+            /*
+
 			while (true) {
 				while (SortUtils.less(a[++i], value)) {
 					if (i == high) {
@@ -322,7 +337,8 @@ class SortFactory {
 				SortUtils.exch(a, i, j);
 			}
 			SortUtils.exch(a, low, j);
-			return j;
+			return j;*/
+            return low;
 		}
 	}
 
